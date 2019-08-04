@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 //@EnableWebSecurity
 public class WebSecurityConfig{
-
     @Autowired
     private AuthenticationManager authenticationManager;
 

@@ -32,7 +32,7 @@ public class DemoController {
     @Autowired
     IDemoService demoService;
 
-    @PreAuthorize("hasRole('ADMIN_ROLE')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/demo/")
     public Mono<String> get(){
         DEMO_LOGGER.info("info");
@@ -77,9 +77,26 @@ public class DemoController {
 
     }
 
-    @RequestMapping(value = "/resource/user", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('USER_ROLE')")
+    @RequestMapping(value = "/resource/user1", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Mono<ResponseEntity<?>> user() {
-        return Mono.just(ResponseEntity.ok("Content for user"));
+        return Mono.just(ResponseEntity.ok("Content for admin"));
+    }
+
+    @RequestMapping(value = "/resource/user2", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER') or  hasRole('ROLE_ADMIN')")
+    public Mono<ResponseEntity<?>> user2() {
+        return Mono.just(ResponseEntity.ok("Content for user both"));
+    }
+
+    @RequestMapping(value = "/resource/user3", method = RequestMethod.GET)
+    public Mono<ResponseEntity<?>> user1() {
+        return Mono.just(ResponseEntity.ok("Content for no"));
+    }
+
+    @RequestMapping(value = "/resource/user4", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_BISHAL')")
+    public Mono<ResponseEntity<?>> user4() {
+        return Mono.just(ResponseEntity.ok("Content for bishal"));
     }
 }

@@ -1,5 +1,5 @@
 package com.application.jwt.v1.enums;
 
 public enum Role {
-    USER_ROLE, ADMIN_ROLE;
+    ROLE_USER, ROLE_ADMIN, ROLE_BISHAL;
 }

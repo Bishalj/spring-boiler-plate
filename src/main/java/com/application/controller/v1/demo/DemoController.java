@@ -94,9 +94,10 @@ public class DemoController {
         return Mono.just(ResponseEntity.ok("Content for no"));
     }
 
-    @RequestMapping(value = "/resource/user4", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_BISHAL')")
-    public Mono<ResponseEntity<?>> user4() {
+
+    @RequestMapping(value = "/resource/user5", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('BISHAL')")
+    public Mono<ResponseEntity<?>> user5() {
         return Mono.just(ResponseEntity.ok("Content for bishal"));
     }
 }

@@ -1,7 +1,13 @@
 package com.application.controller.v1.demo;
 
 import com.application.controller.v1.routes.ApiRoutes;
+import com.application.encryptor.v1.PBKDF2Encoder;
 import com.application.exception.v1.dao.MongoException;
+import com.application.jwt.v1.enums.Role;
+import com.application.jwt.v1.mappers.request.AuthRequest;
+import com.application.jwt.v1.mappers.request.User;
+import com.application.jwt.v1.mappers.response.AuthResponse;
+import com.application.jwt.v1.util.JWTUtil;
 import com.application.mappers.v1.DemoResponseMapper;
 import com.application.models.v1.Demo;
 import com.application.services.v1.demo.IDemoService;
@@ -9,12 +15,14 @@ import com.application.utils.v1.Demo.DemoResponseMapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.RequestScope;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
 
 @RestController
 public class DemoController {
@@ -24,6 +32,7 @@ public class DemoController {
     @Autowired
     IDemoService demoService;
 
+    @PreAuthorize("hasRole('ADMIN_ROLE')")
     @GetMapping("/demo/")
     public Mono<String> get(){
         DEMO_LOGGER.info("info");
@@ -46,5 +55,31 @@ public class DemoController {
                         else
                             return ex;
                     });
+    }
+
+    @Autowired
+    private JWTUtil jwtUtil;
+
+    @Autowired
+    private PBKDF2Encoder passwordEncoder;
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar) {
+//        return userRepository.findByUsername(ar.getUsername()).map((userDetails) -> {
+//            if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
+//                return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
+//            } else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//            }
+//        }).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        User user = new User(ar.getUsername(),ar.getPassword(), true, Arrays.asList(Role.valueOf(ar.getRole())));
+         return Mono.just(ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(user))));
+
+    }
+
+    @RequestMapping(value = "/resource/user", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('USER_ROLE')")
+    public Mono<ResponseEntity<?>> user() {
+        return Mono.just(ResponseEntity.ok("Content for user"));
     }
 }

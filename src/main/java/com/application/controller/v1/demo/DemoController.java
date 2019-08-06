@@ -108,8 +108,8 @@ public class DemoController {
     public Mono<ResponseEntity<?>> password(@PathVariable("password") String password) {
         return Mono.just(ResponseEntity.ok(pbkdf2Encoder.encode(password)));
     }
-    @RequestMapping(value = "/passwordencrypto/match/test", method = RequestMethod.GET)
-    public Mono<ResponseEntity<?>> password(@RequestParam("password") String password, @RequestParam("encodedpassword") String encodedpassword) {
-        return Mono.just(ResponseEntity.ok(pbkdf2Encoder.matches(password, encodedpassword)));
+    @RequestMapping(value = "/passwordencrypto/match/test", method = RequestMethod.POST)
+    public Mono<ResponseEntity<?>> password(@RequestBody AuthRequest authRequest){
+        return Mono.just(ResponseEntity.ok(pbkdf2Encoder.matches(authRequest.getPassword(), authRequest.getEncryptedPassword())));
     }
 }

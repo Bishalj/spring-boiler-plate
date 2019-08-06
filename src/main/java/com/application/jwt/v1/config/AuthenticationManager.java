@@ -24,6 +24,7 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
+
         String authToken = authentication.getCredentials().toString();
         return getValidationTokenResponse(authToken);
     }

@@ -12,9 +12,5 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-//	@Bean
-//	GrantedAuthorityDefaults grantedAuthorityDefaults() {
-//		return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
-//	}
 }
 

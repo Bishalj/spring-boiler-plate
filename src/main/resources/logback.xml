@@ -42,5 +42,9 @@
         <appender-ref ref="FILE"/>
         <appender-ref ref="CONSOLE"/>
     </root>
+    <root>
+        <level value="TRACE"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
 
 </configuration>
